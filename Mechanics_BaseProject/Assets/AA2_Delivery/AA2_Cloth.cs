@@ -24,10 +24,18 @@ public class AA2_Cloth
     [System.Serializable]
     public struct ClothSettings
     {
+        [Header("Structural Sring")]
         public float structuralElasticCoef;
         public float structuralDampCoef;
-
         public float structuralSpring;
+        [Header("Shear Sring")]
+        public float shearElasticCoef;
+        public float shearDampCoef;
+        public float shearSpring;
+        [Header("Bending Sring")]
+        public float bendingElasticCoef;
+        public float bendingDampCoef;
+        public float bendingSpring;
     }
     public ClothSettings clothSettings;
 
@@ -59,19 +67,31 @@ public class AA2_Cloth
     public Vertex[] points;
     public void Update(float dt)
     {
-        int totalVertices = settings.xPartSize + 1;
-        for (int i = settings.xPartSize + 1; i < points.Length; i++)
+        int xVertices = settings.xPartSize + 1;
+        int yVertices = settings.yPartSize + 1;
+
+        Vector3C[] structuralForces = new Vector3C[points.Length];
+
+        for (int i = 0; i < points.Length; i++)
         {
-            
-            float magnitudeY = (points[i - totalVertices].actualPosition
-                - points[i].actualPosition).magnitude - clothSettings.structuralSpring;//Falta distancia
-            Vector3C forceVector = (points[i - totalVertices].actualPosition
-                - points[i].actualPosition).normalized * magnitudeY;
-
-            Vector3C dampingForce = (points[i].velocity - points[i - totalVertices].velocity  * clothSettings.structuralDampCoef);
-            Vector3C structuralYSpringForce = (forceVector * clothSettings.structuralElasticCoef) - dampingForce;
-
-            points[i].Euler(settings.gravity + structuralYSpringForce, dt);
+            //STRUCTURAL VERTICAL
+            if(i > xVertices-1)
+            {
+                float structMagnitudeY = (points[i - xVertices].actualPosition - points[i].actualPosition).magnitude
+                                        - clothSettings.structuralSpring;
+                Vector3C structForceVector = (points[i - xVertices].actualPosition
+                    - points[i].actualPosition).normalized * structMagnitudeY * clothSettings.structuralElasticCoef;
+                //Falta restar fuerza de amortiguamento
+                Vector3C structDampForceVector = (points[i].velocity
+                    - points[i - xVertices].velocity) * clothSettings.structuralDampCoef;
+                structuralForces[i] += structForceVector;
+                structuralForces[i] += -structDampForceVector;
+                structuralForces[i - xVertices] += -structForceVector;
+            }   
+        }
+        for (int i = xVertices; i < points.Length; i++)
+        {
+            points[i].Euler(settings.gravity + structuralForces[i], dt);
         }
     }
 

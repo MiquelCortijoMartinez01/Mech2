@@ -224,17 +224,22 @@ MonoBehaviour:
     settings:
       gravity:
         x: 0
-        y: -9.81
+        y: -9.80655
         z: 0
       width: 10
       height: 10
       xPartSize: 10
       yPartSize: 5
     clothSettings:
-      structuralElasticCoef: 2
-      structuralDampCoef: 0.8
-      damptCoef: 0
-      structuralSpring: 0.1
+      structuralElasticCoef: 50
+      structuralDampCoef: 3
+      structuralSpring: 1
+      shearElasticCoef: 0
+      shearDampCoef: 0
+      shearSpring: 0
+      bendingElasticCoef: 0
+      bendingDampCoef: 0
+      bendingSpring: 0
     settingsCollision:
       sphere:
         position:
