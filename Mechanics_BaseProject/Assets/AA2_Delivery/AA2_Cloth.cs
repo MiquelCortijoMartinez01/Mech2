@@ -87,12 +87,29 @@ public class AA2_Cloth
                 structuralForces[i] += structForceVector;
                 structuralForces[i] += -structDampForceVector;
                 structuralForces[i - xVertices] += -structForceVector;
-            }   
+            }
+            if (i > yVertices - 1)
+            {
+                float structMagnitudeX = (points[i - yVertices].actualPosition - points[i].actualPosition).magnitude
+                                        - clothSettings.structuralSpring;
+                Vector3C structForceVector = (points[i - yVertices].actualPosition
+                    - points[i].actualPosition).normalized * structMagnitudeX * clothSettings.structuralElasticCoef;
+                //Falta restar fuerza de amortiguamento
+                Vector3C structDampForceVector = (points[i].velocity
+                    - points[i - yVertices].velocity) * clothSettings.structuralDampCoef;
+                structuralForces[i] += structForceVector;
+                structuralForces[i] += -structDampForceVector;
+                structuralForces[i - yVertices] += -structForceVector;
+            }
         }
         for (int i = xVertices; i < points.Length; i++)
         {
             points[i].Euler(settings.gravity + structuralForces[i], dt);
         }
+        //for (int i = yVertices; i < points.Length; i++)
+        //{
+        //    points[i].Euler(settings.gravity + structuralForces[i], dt);
+        //}
     }
 
     public void Debug()
