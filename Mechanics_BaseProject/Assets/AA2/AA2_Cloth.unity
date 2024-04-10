@@ -229,11 +229,11 @@ MonoBehaviour:
       width: 10
       height: 10
       xPartSize: 10
-      yPartSize: 5
+      yPartSize: 10
     clothSettings:
       structuralElasticCoef: 40
       structuralDampCoef: 2
-      structuralSpring: 3
+      structuralSpring: 1
       shearElasticCoef: 0
       shearDampCoef: 0
       shearSpring: 0

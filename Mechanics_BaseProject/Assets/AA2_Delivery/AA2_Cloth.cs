@@ -71,6 +71,7 @@ public class AA2_Cloth
         int yVertices = settings.yPartSize + 1;
 
         Vector3C[] structuralForces = new Vector3C[points.Length];
+        Vector3C[] shearForces = new Vector3C[points.Length];
 
         for (int i = 0; i < points.Length; i++)
         {
@@ -88,23 +89,50 @@ public class AA2_Cloth
                 structuralForces[i] += -structDampForceVector;
                 structuralForces[i - xVertices] += -structForceVector;
             }
+            //STRUCTURAL HORIZONTAL
             if (i > yVertices - 1)
             {
-                float structMagnitudeX = (points[i - yVertices].actualPosition - points[i].actualPosition).magnitude
+                float structMagnitudeX = (points[i - 1].actualPosition - points[i].actualPosition).magnitude
                                         - clothSettings.structuralSpring;
-                Vector3C structForceVector = (points[i - yVertices].actualPosition
+                Vector3C structForceVector = (points[i - 1].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeX * clothSettings.structuralElasticCoef;
-                //Falta restar fuerza de amortiguamento
                 Vector3C structDampForceVector = (points[i].velocity
-                    - points[i - yVertices].velocity) * clothSettings.structuralDampCoef;
+                    - points[i - 1].velocity) * clothSettings.structuralDampCoef;
                 structuralForces[i] += structForceVector;
                 structuralForces[i] += -structDampForceVector;
-                structuralForces[i - yVertices] += -structForceVector;
+                structuralForces[i - 1] += -structForceVector;
             }
+            //SHEAR DIAGONAL IZQ-ABJ/DER-ARR
+            //if(i > xVertices-1 && i%xVertices != 0)
+            //{
+            //    float structMagnitudeDiagonalAsc = (points[i - xVertices + 1].actualPosition - points[i].actualPosition).magnitude
+            //        - clothSettings.shearSpring;
+            //    Vector3C shearForceVector = (points[i - xVertices + 1].actualPosition
+            //        - points[i].actualPosition).normalized * structMagnitudeDiagonalAsc * clothSettings.shearElasticCoef;
+            //    Vector3C shearDampForceVector = (points[i].velocity
+            //        - points[i - xVertices + 1].velocity) * clothSettings.shearDampCoef;
+            //    shearForces[i] += shearForceVector;
+            //    shearForces[i] += -shearDampForceVector;
+            //    shearForces[i - xVertices + 1] += -shearForceVector;
+            //}
+            ////SHEAR DIAGONAL DER-ABJ/IZQ-ABJ
+            //if(i > yVertices -1 && i > xVertices - 1)
+            //{
+            //    float structMagnitudeDiagonalDesc = (points[i - xVertices - 1].actualPosition - points[i].actualPosition).magnitude
+            //        -clothSettings.shearSpring;
+            //    Vector3C shearForceVector = (points[i - xVertices - 1].actualPosition
+            //        - points[i].actualPosition).normalized * structMagnitudeDiagonalDesc * clothSettings.shearElasticCoef;
+            //    Vector3C shearDampForceVector = (points[i].velocity
+            //        - points[i - xVertices - 1].velocity) * clothSettings.shearDampCoef;
+            //    shearForces[i] += shearForceVector;
+            //    shearForces[i] += -shearDampForceVector;
+            //    shearForces[i - xVertices - 1] += -shearForceVector;
+            //}
         }
-        for (int i = xVertices; i < points.Length; i++)
+        for (int i = 0; i < points.Length; i++)
         {
-            points[i].Euler(settings.gravity + structuralForces[i], dt);
+            if (i != 0 && i != xVertices - 1)
+                points[i].Euler(settings.gravity + structuralForces[i], dt);
         }
         //for (int i = yVertices; i < points.Length; i++)
         //{
