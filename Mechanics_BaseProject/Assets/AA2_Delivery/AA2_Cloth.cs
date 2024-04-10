@@ -82,7 +82,7 @@ public class AA2_Cloth
                                         - clothSettings.structuralSpring;
                 Vector3C structForceVector = (points[i - xVertices].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeY * clothSettings.structuralElasticCoef;
-                //Falta restar fuerza de amortiguamento
+                
                 Vector3C structDampForceVector = (points[i].velocity
                     - points[i - xVertices].velocity) * clothSettings.structuralDampCoef;
                 structuralForces[i] += structForceVector;
@@ -90,17 +90,17 @@ public class AA2_Cloth
                 structuralForces[i - xVertices] += -structForceVector;
             }
             //STRUCTURAL HORIZONTAL
-            if (i > yVertices - 1)
+            if (/*i != 0 ||*/ i%(xVertices - 1) != 0)
             {
-                float structMagnitudeX = (points[i - 1].actualPosition - points[i].actualPosition).magnitude
+                float structMagnitudeX = (points[i + 1].actualPosition - points[i].actualPosition).magnitude
                                         - clothSettings.structuralSpring;
-                Vector3C structForceVector = (points[i - 1].actualPosition
+                Vector3C structForceVector = (points[i + 1].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeX * clothSettings.structuralElasticCoef;
                 Vector3C structDampForceVector = (points[i].velocity
-                    - points[i - 1].velocity) * clothSettings.structuralDampCoef;
+                    - points[i + 1].velocity) * clothSettings.structuralDampCoef;
                 structuralForces[i] += structForceVector;
                 structuralForces[i] += -structDampForceVector;
-                structuralForces[i - 1] += -structForceVector;
+                structuralForces[i + 1] += -structForceVector;
             }
             //SHEAR DIAGONAL IZQ-ABJ/DER-ARR
             //if(i > xVertices-1 && i%xVertices != 0)

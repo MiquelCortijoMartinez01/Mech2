@@ -231,7 +231,7 @@ MonoBehaviour:
       xPartSize: 10
       yPartSize: 10
     clothSettings:
-      structuralElasticCoef: 40
+      structuralElasticCoef: 150
       structuralDampCoef: 2
       structuralSpring: 1
       shearElasticCoef: 0
