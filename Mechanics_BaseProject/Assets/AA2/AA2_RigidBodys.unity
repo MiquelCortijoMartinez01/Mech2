@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,37 +171,83 @@ MonoBehaviour:
   cubeMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   rigidbodies:
   - settings:
+      nCubos: 0
       gravity:
         x: 0
         y: 0
         z: 0
       bounce: 0
     settingsCollision:
-      planes: []
-  - settings:
-      gravity:
+      planes:
+      - position:
+          x: 0.5
+          y: 0
+          z: 0
+        normal:
+          x: 0.5
+          y: 0
+          z: 0
+      - position:
+          x: -0.5
+          y: 0
+          z: 0
+        normal:
+          x: 0.5
+          y: 0
+          z: 0
+      - position:
+          x: 0
+          y: 0
+          z: 0.5
+        normal:
+          x: 0
+          y: 0
+          z: 0
+      - position:
+          x: 0
+          y: 0
+          z: -0.5
+        normal:
+          x: 0
+          y: 0
+          z: 0
+      - position:
+          x: 0
+          y: 0
+          z: -0.5
+        normal:
+          x: 0
+          y: 0
+          z: 0
+      - position:
+          x: 0
+          y: 0.5
+          z: 0
+        normal:
+          x: 0
+          y: 0.5
+          z: 0
+      - position:
+          x: 0
+          y: -0.5
+          z: 0
+        normal:
+          x: 0
+          y: 0.5
+          z: 0
+    crb:
+      position:
         x: 0
         y: 0
         z: 0
-      bounce: 0
-    settingsCollision:
-      planes: []
-  - settings:
-      gravity:
+      size:
+        x: 0.1
+        y: 0.1
+        z: 0.1
+      euler:
         x: 0
         y: 0
         z: 0
-      bounce: 0
-    settingsCollision:
-      planes: []
-  - settings:
-      gravity:
-        x: 0
-        y: 0
-        z: 0
-      bounce: 0
-    settingsCollision:
-      planes: []
 --- !u!1 &498822787
 GameObject:
   m_ObjectHideFlags: 0
