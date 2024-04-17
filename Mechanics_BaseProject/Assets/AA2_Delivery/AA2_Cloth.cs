@@ -28,14 +28,20 @@ public class AA2_Cloth
         public float structuralElasticCoef;
         public float structuralDampCoef;
         public float structuralSpring;
+        [Header("")]
+        public float structuralMaxL; //distancia maxima entre vertices contiguos
         [Header("Shear Sring")]
         public float shearElasticCoef;
         public float shearDampCoef;
         public float shearSpring;
+        [Header("")]
+        public float shearMaxL;
         [Header("Bending Sring")]
         public float bendingElasticCoef;
         public float bendingDampCoef;
         public float bendingSpring;
+        [Header("")]
+        public float bendingMaxL;
     }
     public ClothSettings clothSettings;
 
@@ -103,7 +109,7 @@ public class AA2_Cloth
                 structuralForces[i - 1] += -structForceVector;
             }
             //SHEAR DIAGONAL IZQ-ABJ/DER-ARR
-            if (i > xVertices - 1 && i % (xVertices-1) != 0)
+            if (i > xVertices && i % (xVertices) != 0)
             {
                 float structMagnitudeDiagonalAsc = (points[i - xVertices + 1].actualPosition - points[i].actualPosition).magnitude
                     - clothSettings.shearSpring;
@@ -133,26 +139,25 @@ public class AA2_Cloth
             if (i > ((xVertices*2)-1))
             {
                 float bendingMagnitudeY = (points[i - (xVertices * 2)].actualPosition - points[i].actualPosition).magnitude
-                                        - clothSettings.structuralSpring;
+                                        - clothSettings.bendingSpring;
                 Vector3C bendingForceVector = (points[i - (xVertices * 2)].actualPosition
-                    - points[i].actualPosition).normalized * bendingMagnitudeY * clothSettings.structuralElasticCoef;
+                    - points[i].actualPosition).normalized * bendingMagnitudeY * clothSettings.bendingElasticCoef;
 
                 Vector3C bendingDampForceVector = (points[i].velocity
-                    - points[i - (xVertices * 2)].velocity) * clothSettings.structuralDampCoef;
+                    - points[i - (xVertices * 2)].velocity) * clothSettings.bendingDampCoef;
                 bendingForces[i] += bendingForceVector;
                 bendingForces[i] += -bendingDampForceVector;
                 bendingForces[i - (xVertices * 2)] += -bendingForceVector;
             }
             //BENDING HORIZONTAL
-            if (i % (xVertices) != 0 && i % (xVertices + 1) != 0 && i != 1)
+            if (i % xVertices != 0 && i > 1)
             {
-                UnityEngine.Debug.Log(i - 2);
                 float bendingMagnitudeX = (points[i - 2].actualPosition - points[i].actualPosition).magnitude
-                                       - clothSettings.structuralSpring;
+                                       - clothSettings.bendingSpring;
                 Vector3C bendingForceVector = (points[i - 2].actualPosition
-                    - points[i].actualPosition).normalized * bendingMagnitudeX * clothSettings.structuralElasticCoef;
+                    - points[i].actualPosition).normalized * bendingMagnitudeX * clothSettings.bendingElasticCoef;
                 Vector3C bendingDampForceVector = (points[i].velocity
-                    - points[i - 2].velocity) * clothSettings.structuralDampCoef;
+                    - points[i - 2].velocity) * clothSettings.bendingDampCoef;
                 bendingForces[i] += bendingForceVector;
                 bendingForces[i] += -bendingDampForceVector;
                 bendingForces[i - 2] += -bendingForceVector;
@@ -162,6 +167,7 @@ public class AA2_Cloth
         {
             if (i != 0 && i != xVertices - 1)
                 points[i].Euler(settings.gravity + structuralForces[i] + shearForces[i] + bendingForces[i], dt);
+        
         }
         //for (int i = yVertices; i < points.Length; i++)
         //{
