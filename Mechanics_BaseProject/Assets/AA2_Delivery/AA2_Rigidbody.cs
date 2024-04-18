@@ -27,26 +27,32 @@ public class AA2_Rigidbody
     {
         public Vector3C position;
         public Vector3C lastPosition;
+        public Vector3C lastPosition2;
         public Vector3C size;
         public Vector3C euler;
         public float density;
-        public CubeRigidbody(Vector3C _position, Vector3C _lastPosition, Vector3C _size, Vector3C _euler, float _density)
+        public CubeRigidbody(Vector3C _position, Vector3C _lastPosition, Vector3C _lastPosition2, Vector3C _size, Vector3C _euler, float _density)
         {
             position = _position;
             lastPosition = _lastPosition;
+            lastPosition2 = _lastPosition2;
             size = _size;
             euler = _euler;
             density = _density;
         }
     }
-    public CubeRigidbody crb = new CubeRigidbody(Vector3C.zero, Vector3C.zero, new(.1f,.1f,.1f), Vector3C.zero, 100);
+    public CubeRigidbody crb = new CubeRigidbody(Vector3C.zero, Vector3C.zero, Vector3C.zero, new(.1f,.1f,.1f), Vector3C.zero, 100);
     
     public void Update(float dt)
     {
+        crb.lastPosition2 = crb.lastPosition;
+        crb.lastPosition = crb.position;
         float volume = crb.size.x * crb.size.y * crb.size.z;
         Vector3C force;
-        force = settings.gravity * crb.density * volume * dt;
-        crb.position += force;
+        force = settings.gravity * crb.density * volume;
+        crb.position += force * dt;
+        //VERLET:
+        //crb.position = crb.lastPosition*2 - crb.lastPosition2 + settings.gravity * Mathf.Pow(dt, 2);
         
             //cubeRList[i].AddForce(settings.gravity * dt);
             //cubeRList[i].lastPosition = particles[i].position;
