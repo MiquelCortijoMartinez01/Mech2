@@ -25,29 +25,32 @@ public class AA2_Rigidbody
     [System.Serializable]
     public struct CubeRigidbody
     {
-        
         public Vector3C position;
+        public Vector3C lastPosition;
         public Vector3C size;
         public Vector3C euler;
-        public CubeRigidbody(Vector3C _position, Vector3C _size, Vector3C _euler)
+        public float density;
+        public CubeRigidbody(Vector3C _position, Vector3C _lastPosition, Vector3C _size, Vector3C _euler, float _density)
         {
             position = _position;
+            lastPosition = _lastPosition;
             size = _size;
             euler = _euler;
+            density = _density;
         }
     }
-    public CubeRigidbody crb = new CubeRigidbody(Vector3C.zero, new(.1f,.1f,.1f), Vector3C.zero);
-    CubeRigidbody[] cubeRList = null;
+    public CubeRigidbody crb = new CubeRigidbody(Vector3C.zero, Vector3C.zero, new(.1f,.1f,.1f), Vector3C.zero, 100);
     
     public void Update(float dt)
     {
-        cubeRList = new CubeRigidbody[settings.nCubos];
-        for (int i = 0; i < cubeRList.Length; ++i)
-        {
+        float volume = crb.size.x * crb.size.y * crb.size.z;
+        Vector3C force;
+        force = settings.gravity * crb.density * volume * dt;
+        crb.position += force;
+        
             //cubeRList[i].AddForce(settings.gravity * dt);
             //cubeRList[i].lastPosition = particles[i].position;
             //cubeRList[i].position += cubeRList[i].acceleration * dt;
-            cubeRList[i].position += settings.gravity;
             
 
             //for (int j = 0; j < settingsCollision.planes.Length; ++j)
@@ -92,9 +95,6 @@ public class AA2_Rigidbody
 
             //    }
             //}
-            
-            
-        }
     }
 
     public void Debug()

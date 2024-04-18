@@ -174,7 +174,7 @@ MonoBehaviour:
       nCubos: 0
       gravity:
         x: 0
-        y: 0
+        y: -9.80655
         z: 0
       bounce: 0
     settingsCollision:
@@ -240,6 +240,10 @@ MonoBehaviour:
         x: 0
         y: 0
         z: 0
+      lastPosition:
+        x: 0
+        y: 0
+        z: 0
       size:
         x: 0.1
         y: 0.1
@@ -248,6 +252,7 @@ MonoBehaviour:
         x: 0
         y: 0
         z: 0
+      density: 100
 --- !u!1 &498822787
 GameObject:
   m_ObjectHideFlags: 0
