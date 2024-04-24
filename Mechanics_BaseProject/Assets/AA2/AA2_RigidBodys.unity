@@ -244,6 +244,10 @@ MonoBehaviour:
         x: 0
         y: 0
         z: 0
+      lastPosition2:
+        x: 0
+        y: 0
+        z: 0
       size:
         x: 0.1
         y: 0.1
@@ -251,6 +255,10 @@ MonoBehaviour:
       euler:
         x: 0
         y: 0
+        z: 0
+      aVelocity:
+        x: 90
+        y: 250
         z: 0
       density: 100
 --- !u!1 &498822787
