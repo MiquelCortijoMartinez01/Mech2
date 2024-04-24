@@ -86,6 +86,10 @@ public class AA2_Cloth
             {
                 float structMagnitudeY = (points[i - xVertices].actualPosition - points[i].actualPosition).magnitude
                                         - clothSettings.structuralSpring;
+
+                structMagnitudeY *= clothSettings.structuralMaxL
+                    * (points[i - xVertices].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C structForceVector = (points[i - xVertices].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeY * clothSettings.structuralElasticCoef;
                 
@@ -100,6 +104,10 @@ public class AA2_Cloth
             {
                 float structMagnitudeX = (points[i - 1].actualPosition - points[i].actualPosition).magnitude
                                         - clothSettings.structuralSpring;
+
+                structMagnitudeX *= clothSettings.structuralMaxL
+                    * (points[i - 1].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C structForceVector = (points[i - 1].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeX * clothSettings.structuralElasticCoef;
                 Vector3C structDampForceVector = (points[i].velocity
@@ -113,6 +121,10 @@ public class AA2_Cloth
             {
                 float structMagnitudeDiagonalAsc = (points[i - xVertices + 1].actualPosition - points[i].actualPosition).magnitude
                     - clothSettings.shearSpring;
+
+                structMagnitudeDiagonalAsc *= clothSettings.shearMaxL
+                    * (points[i - xVertices + 1].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C shearForceVector = (points[i - xVertices + 1].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeDiagonalAsc * clothSettings.shearElasticCoef;
                 Vector3C shearDampForceVector = (points[i].velocity
@@ -126,6 +138,10 @@ public class AA2_Cloth
             {
                 float structMagnitudeDiagonalDesc = (points[i - xVertices - 1].actualPosition - points[i].actualPosition).magnitude
                     - clothSettings.shearSpring;
+
+                structMagnitudeDiagonalDesc *= clothSettings.shearMaxL
+                    * (points[i - xVertices - 1].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C shearForceVector = (points[i - xVertices - 1].actualPosition
                     - points[i].actualPosition).normalized * structMagnitudeDiagonalDesc * clothSettings.shearElasticCoef;
                 Vector3C shearDampForceVector = (points[i].velocity
@@ -140,6 +156,10 @@ public class AA2_Cloth
             {
                 float bendingMagnitudeY = (points[i - (xVertices * 2)].actualPosition - points[i].actualPosition).magnitude
                                         - clothSettings.bendingSpring;
+
+                bendingMagnitudeY *= clothSettings.bendingMaxL
+                    * (points[i - (xVertices * 2)].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C bendingForceVector = (points[i - (xVertices * 2)].actualPosition
                     - points[i].actualPosition).normalized * bendingMagnitudeY * clothSettings.bendingElasticCoef;
 
@@ -154,6 +174,10 @@ public class AA2_Cloth
             {
                 float bendingMagnitudeX = (points[i - 2].actualPosition - points[i].actualPosition).magnitude
                                        - clothSettings.bendingSpring;
+
+                bendingMagnitudeX *= clothSettings.bendingMaxL
+                    * (points[i - 2].actualPosition - points[i].actualPosition).magnitude;
+
                 Vector3C bendingForceVector = (points[i - 2].actualPosition
                     - points[i].actualPosition).normalized * bendingMagnitudeX * clothSettings.bendingElasticCoef;
                 Vector3C bendingDampForceVector = (points[i].velocity
@@ -167,12 +191,33 @@ public class AA2_Cloth
         {
             if (i != 0 && i != xVertices - 1)
                 points[i].Euler(settings.gravity + structuralForces[i] + shearForces[i] + bendingForces[i], dt);
-        
+
+            //Collision
+
+            //V, vlocidad que llevo al colisionar
+            //me quedo, pierdo la fuera en y pero conservo en x hasta que la Ff me fren completamente
+            //V = Vx + Vy, Vx = V - Vy. Vy proyeccion sobre la normal
+
+            //Deteccion de la colision
+            bool entered = settingsCollision.sphere.IsInside(points[i].actualPosition);
+            if(entered)
+            {
+                //Calcular Vy
+                Vector3C normal = points[i].actualPosition - settingsCollision.sphere.position;
+                points[i].actualPosition = settingsCollision.sphere.position +
+                    normal.normalized * settingsCollision.sphere.radius;
+                float vyMagnitude = Vector3C.Dot(normal.normalized, points[i].velocity);
+                Vector3C vy = normal * vyMagnitude;
+
+                //Calcular Vx
+                Vector3C vx = points[i].velocity - vy;
+
+                //Nueva velocidad
+                points[i].velocity = vx;
+            }
+
         }
-        //for (int i = yVertices; i < points.Length; i++)
-        //{
-        //    points[i].Euler(settings.gravity + structuralForces[i], dt);
-        //}
+
     }
 
     public void Debug()
