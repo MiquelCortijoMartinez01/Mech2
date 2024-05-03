@@ -10,9 +10,10 @@ public class AA2_CubeRenderer : MonoBehaviour
     public AA2_Rigidbody[] rigidbodies;
     void Update()
     {
-        foreach (AA2_Rigidbody rb in rigidbodies)
+        for(int i = 0; i < rigidbodies.Length; i++)
         {
-            rb.Update(Time.deltaTime);
+            rigidbodies[i].Update(Time.deltaTime);
+            rigidbodies[i].GetOthersRigidbodysArray(rigidbodies);
         }
 
         RenderParams rp = new RenderParams(cubeMaterial);

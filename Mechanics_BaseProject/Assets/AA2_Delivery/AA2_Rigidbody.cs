@@ -1,7 +1,12 @@
 using static AA1_ParticleSystem;
 using UnityEngine;
 using System.Collections.Generic;
-
+using System.Security.Cryptography;
+//obligatori utilitzar quaternions per a aquesta activitat
+//permetré excepcionalment utilitzar la classe System.Numerics.Quaternion, NO la UnityEngine.Quaternion
+//https://learn.microsoft.com/en-us/dotnet/api/system.numerics.quaternion?view=net-8.0
+//Aquells que creïn la seva pròpia estructura de quaternion dins de la carpeta Common_Delivery rebran
+//un punt extra en la nota final d'aquesta activitat
 [System.Serializable]
 public class AA2_Rigidbody
 {
@@ -44,7 +49,22 @@ public class AA2_Rigidbody
         }
     }
     public CubeRigidbody crb = new CubeRigidbody(Vector3C.zero, Vector3C.zero, Vector3C.zero, new(.1f,.1f,.1f), Vector3C.zero, Vector3C.zero, 100);
-    
+
+    public void GetOthersRigidbodysArray(AA2_Rigidbody[] allRigidbodies)
+    {
+        AA2_Rigidbody[] othersRigidbodys = new AA2_Rigidbody[allRigidbodies.Length - 1];
+        int index = 0;
+        for (int i = 0; i < allRigidbodies.Length; i++)
+        {
+            if (allRigidbodies[i] != this)
+            {
+                othersRigidbodys[index++] = allRigidbodies[i];
+            }
+        }
+        // Aquest array conté els altres rigidbodys amb els quals podreu interactuar.
+    }
+    //L'array othersRigidbodys us retorna els altres cossos rígids en l'escena per poder implementar les col·lisions.
+
     public void Update(float dt)
     {
         crb.lastPosition2 = crb.lastPosition;
