@@ -234,15 +234,15 @@ MonoBehaviour:
       structuralElasticCoef: 400
       structuralDampCoef: 1
       structuralSpring: 1
-      structuralMaxL: 0
+      structuralMaxL: 0.5
       shearElasticCoef: 100
       shearDampCoef: 1
       shearSpring: 5
-      shearMaxL: 0
+      shearMaxL: 0.5
       bendingElasticCoef: 1
       bendingDampCoef: 1
       bendingSpring: 2
-      bendingMaxL: 0
+      bendingMaxL: 0.5
     settingsCollision:
       sphere:
         position:
